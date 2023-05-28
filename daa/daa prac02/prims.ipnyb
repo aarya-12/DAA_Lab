@@ -1,0 +1,36 @@
+from geopy.geocoders import Nominatim
+geolocator = Nominatim(user_agent="specify_your_app_name_here")
+
+location = [geolocator.geocode("Nagpur"), geolocator.geocode("Mumbai"), geolocator.geocode("Pune"), geolocator.geocode("Nashik"),geolocator.geocode("Thane")]
+for l in location:
+    print((l.latitude, l.longitude))
+
+from geopy.distance import geodesic
+cost = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+min=10000000
+n,m=0,0
+for i in range(len(cost)):
+  for j in range(len(cost[i])):
+    if(i<j):
+      cost[i][j]=cost[j][i]=geodesic((location[i].latitude,location[i].longitude), (location[j].latitude,location[j].longitude)).miles
+      if(cost[i][j]<min and i!=j):
+        min=cost[i][j]
+        n=i
+        m=j
+print(min)
+for i in range(len(cost)):
+  for j in range(len(cost[i])):
+    print(cost[i][j],end='\t')
+  print()
+
+t=[[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
+t[0][0]=n
+t[0][1]=m
+t[0][2]=cost[n][m]
+near=[0,0,0,0,0]
+for i in range(len(near)):
+  if(cost[n][i]<cost[m][i]):
+    near[i]=n
+  else:
+    near[i]=m 
+print(near)
